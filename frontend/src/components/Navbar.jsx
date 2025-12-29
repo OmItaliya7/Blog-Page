@@ -1,25 +1,29 @@
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const location = useLocation();
   const [open, setOpen] = useState(false);
 
-  // Hide navbar on admin login page
-  if (location.pathname === "/admin") return null;
+  // Hide navbar on all admin routes
+  if (location.pathname.startsWith("/admin")) return null;
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setOpen(false);
+  }, [location.pathname]);
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur border-b">
       <nav className="max-w-7xl mx-auto px-5 h-16 flex items-center justify-between">
-        
-        
-        <Link to="/" className="text-xl font-semibold tracking-tight">
-          Blog<span className="text-gray-500">Space</span>
+        {/* LOGO */}
+        <Link to="/" className="text-xl font-bold tracking-tight">
+          Blog<span className="text-gray-500 font-medium">Space</span>
         </Link>
 
-        
+        {/* DESKTOP */}
         <div className="hidden md:flex items-center gap-8 text-sm">
           <Link className="text-gray-600 hover:text-black transition" to="/">
             Home
@@ -64,7 +68,7 @@ const Navbar = () => {
           )}
         </div>
 
-       
+        {/* MOBILE BUTTON */}
         <button
           className="md:hidden text-2xl"
           onClick={() => setOpen(!open)}
@@ -73,46 +77,31 @@ const Navbar = () => {
         </button>
       </nav>
 
-      
+      {/* MOBILE MENU */}
       {open && (
-        <div className="md:hidden bg-white border-t px-6 py-4 space-y-4">
-          <Link onClick={() => setOpen(false)} to="/" className="block">
+        <div className="md:hidden bg-white border-t px-6 py-4 space-y-4 text-sm">
+          <Link to="/" className="block">
             Home
           </Link>
 
           {user?.role === "admin" && (
-            <Link
-              onClick={() => setOpen(false)}
-              to="/admin/dashboard"
-              className="block"
-            >
+            <Link to="/admin/dashboard" className="block">
               Dashboard
             </Link>
           )}
 
           {!user ? (
             <>
-              <Link
-                onClick={() => setOpen(false)}
-                to="/login"
-                className="block"
-              >
+              <Link to="/login" className="block">
                 Login
               </Link>
-              <Link
-                onClick={() => setOpen(false)}
-                to="/register"
-                className="block font-medium"
-              >
+              <Link to="/register" className="block font-medium">
                 Get Started
               </Link>
             </>
           ) : (
             <button
-              onClick={() => {
-                logout();
-                setOpen(false);
-              }}
+              onClick={logout}
               className="text-red-500"
             >
               Logout

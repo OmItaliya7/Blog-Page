@@ -8,24 +8,52 @@ const Register = () => {
     email: "",
     password: "",
   });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await API.post("/auth/register", form);
-    navigate("/login");
+    setError("");
+    setSuccess("");
+
+    try {
+      const res = await API.post("/auth/register", form);
+      setSuccess(res.data.message || "Registration successful");
+
+      // small delay for better UX
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200 px-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-6">
         <h2 className="text-3xl font-bold text-center mb-2">
-          Create Account 
+          Create Account
         </h2>
         <p className="text-gray-500 text-center mb-6">
           Join our blog community
         </p>
+
+        {error && (
+          <p className="text-red-500 text-sm text-center mb-4">
+            {error}
+          </p>
+        )}
+        {success && (
+          <p className="text-green-600 text-sm text-center mb-4">
+            {success}
+          </p>
+        )}
 
         <form onSubmit={handleSubmit} autoComplete="off" className="space-y-4">
           <div>
@@ -34,12 +62,13 @@ const Register = () => {
             </label>
             <input
               required
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-black"
+              value={form.name}
               autoComplete="new-name"
               placeholder="Your name"
               onChange={(e) =>
                 setForm({ ...form, name: e.target.value })
               }
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-black"
             />
           </div>
 
@@ -50,12 +79,13 @@ const Register = () => {
             <input
               type="email"
               required
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-black"
+              value={form.email}
               autoComplete="new-email"
               placeholder="you@example.com"
               onChange={(e) =>
                 setForm({ ...form, email: e.target.value })
               }
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-black"
             />
           </div>
 
@@ -66,16 +96,20 @@ const Register = () => {
             <input
               type="password"
               required
-                autoComplete="new-password"
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-black"
+              value={form.password}
+              autoComplete="new-password"
               placeholder="••••••••"
               onChange={(e) =>
                 setForm({ ...form, password: e.target.value })
               }
+              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-black"
             />
           </div>
 
-          <button className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-900 transition">
+          <button
+            type="submit"
+            className="w-full bg-black text-white py-2 rounded-lg hover:bg-gray-900 transition"
+          >
             Register
           </button>
         </form>

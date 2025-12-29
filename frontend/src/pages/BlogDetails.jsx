@@ -7,6 +7,8 @@ const BlogDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const [blog, setBlog] = useState(null);
+  const [liking, setLiking] = useState(false);
+  const [commentLoading, setCommentLoading] = useState(false);
   const [comment, setComment] = useState("");
 
   const fetchBlog = async () => {
@@ -18,17 +20,48 @@ const BlogDetails = () => {
     fetchBlog();
   }, [id]);
 
+  // const likeBlog = async () => {
+  //   await API.post(`/blogs/${id}/like`);
+  //   fetchBlog();
+  // };
+
   const likeBlog = async () => {
+  if (liking) return;
+
+  try {
+    setLiking(true);
     await API.post(`/blogs/${id}/like`);
     fetchBlog();
-  };
+  } catch (error) {
+    alert("Failed to like blog");
+  } finally {
+    setLiking(false);
+  }
+};
+
+
+  // const addComment = async () => {
+  //   if (!comment.trim()) return;
+  //   await API.post(`/blogs/${id}/comment`, { text: comment });
+  //   setComment("");
+  //   fetchBlog();
+  // };
 
   const addComment = async () => {
-    if (!comment.trim()) return;
+  if (!comment.trim()) return;
+
+  try {
+    setCommentLoading(true);
     await API.post(`/blogs/${id}/comment`, { text: comment });
     setComment("");
     fetchBlog();
-  };
+  } catch (error) {
+    alert("Failed to add comment");
+  } finally {
+    setCommentLoading(false);
+  }
+};
+
 
   const shareBlog = async () => {
     const url = window.location.href;
@@ -79,9 +112,10 @@ const BlogDetails = () => {
         {user && (
           <button
             onClick={likeBlog}
-            className="text-sm px-3 py-1 border rounded hover:bg-gray-100"
+            disabled={liking}
+            className={`text-sm px-3 py-1 border rounded transition $ {liking ? "opacity-60 cursor-not-allowed" : "hover:bg-gray-100"`}
           >
-            ❤️ {blog.likes.length}
+             {liking ? "Liking..." : `❤️ ${blog.likes.length}`}
           </button>
         )}
         <button
@@ -116,9 +150,10 @@ const BlogDetails = () => {
             <div className="flex justify-end">
               <button
                 onClick={addComment}
-                className="mt-2 px-4 py-1.5 text-sm bg-black text-white rounded hover:bg-gray-900"
+                disabled={commentLoading}
+                className={`mt-2 px-4 py-1.5 text-sm rounded transition ${commentLoading ? "bg-gray-400 cursor-not-allowed" : "bg-black text-white hover:bg-gray-900"}`}
               >
-                Post
+                 {commentLoading ? "Posting..." : "Post"}
               </button>
             </div>
           </div>

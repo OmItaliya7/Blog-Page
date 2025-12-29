@@ -6,23 +6,39 @@ import { useNavigate } from "react-router-dom";
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await API.post("/auth/admin/login", {
-      email,
-      password,
-    });
-    login({ ...res.data, role: "admin" });
-    navigate("/admin/dashboard");
+    setError("");
+
+    try {
+      setLoading(true);
+      const res = await API.post("/auth/admin/login", {
+        email,
+        password,
+      });
+
+      // ✅ store backend response as-is
+      login(res.data);
+      navigate("/admin/dashboard");
+    } catch (err) {
+      setError(
+        err.response?.data?.message ||
+          "Admin login failed. Please try again."
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-md p-6">
-        
         <h2 className="text-3xl font-semibold text-center mb-2">
           Admin Login
         </h2>
@@ -30,9 +46,13 @@ const AdminLogin = () => {
           Login to manage blogs
         </p>
 
+        {error && (
+          <p className="text-red-500 text-sm text-center mb-4">
+            {error}
+          </p>
+        )}
+
         <form onSubmit={handleSubmit} autoComplete="off" className="space-y-4">
-          
-          
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Email
@@ -43,12 +63,11 @@ const AdminLogin = () => {
               autoComplete="new-email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Write your email"
+              placeholder="admin@example.com"
               className="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-black"
             />
           </div>
 
-         
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
@@ -64,12 +83,12 @@ const AdminLogin = () => {
             />
           </div>
 
-          
           <button
             type="submit"
-            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-900 transition"
+            disabled={loading}
+            className="w-full bg-black text-white py-2 rounded-md hover:bg-gray-900 transition disabled:opacity-50"
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 

@@ -4,35 +4,43 @@ const BlogCard = ({ blog, onEdit, onDelete }) => {
   const navigate = useNavigate();
 
   return (
-    <div
-      onClick={() => navigate(`/blog/${blog._id}`)}
-      className="border rounded-lg p-4 shadow-sm cursor-pointer hover:shadow-md"
-    >
-      <img
-        src={blog.mediaUrl}
-        alt=""
-        className="h-40 w-full object-cover rounded"
-      />
-
-      <h3 className="text-xl font-semibold mt-2">{blog.title}</h3>
-
-      <p className="text-gray-600 line-clamp-2">
-        {blog.description}
-      </p>
-
+    <div className="border rounded-xl p-4 shadow-sm hover:shadow-md transition bg-white">
+      {/* IMAGE */}
       <div
-        className="flex gap-3 mt-3"
-        onClick={(e) => e.stopPropagation()} // prevent card click
+        onClick={() => navigate(`/blog/${blog._id}`)}
+        className="cursor-pointer"
       >
+        <img
+          src={blog.mediaUrl}
+          alt={blog.title}
+          onError={(e) =>
+            (e.target.src =
+              "https://via.placeholder.com/600x300?text=No+Image")
+          }
+          className="h-40 w-full object-cover rounded-lg"
+        />
+
+        <h3 className="text-lg font-semibold mt-3 line-clamp-2">
+          {blog.title}
+        </h3>
+
+        <p className="text-gray-600 text-sm mt-1 line-clamp-2">
+          {blog.description}
+        </p>
+      </div>
+
+      {/* ACTIONS */}
+      <div className="flex gap-2 mt-4">
         <button
           onClick={() => onEdit(blog)}
-          className="px-3 py-1 bg-blue-600 text-white rounded"
+          className="px-3 py-1.5 text-sm border rounded hover:bg-gray-100"
         >
           Edit
         </button>
+
         <button
           onClick={() => onDelete(blog._id)}
-          className="px-3 py-1 bg-red-600 text-white rounded"
+          className="px-3 py-1.5 text-sm border rounded text-red-600 hover:bg-red-50"
         >
           Delete
         </button>
