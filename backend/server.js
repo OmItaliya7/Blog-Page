@@ -8,17 +8,16 @@ connectDB();
 
 const app = express();
 
+// ✅ VERY IMPORTANT: allow all origins for now
 app.use(
   cors({
-    origin: [
-      "https://blog-space-snowy-gamma.vercel.app/api", // frontend
-    ],
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
 
-// IMPORTANT: handle preflight requests
+// ✅ handle preflight
 app.options("*", cors());
 
 app.use(express.json());
