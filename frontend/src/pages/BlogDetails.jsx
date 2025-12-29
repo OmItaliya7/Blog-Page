@@ -20,19 +20,21 @@ const BlogDetails = () => {
     fetchBlog();
   }, [id]);
 
-  // const likeBlog = async () => {
-  //   await API.post(`/blogs/${id}/like`);
-  //   fetchBlog();
-  // };
 
-  const likeBlog = async () => {
+
+const likeBlog = async () => {
   if (liking) return;
 
   try {
     setLiking(true);
+
     await API.post(`/blogs/${id}/like`);
+
+    // 🔥 force minimum visibility (500ms)
+    await new Promise((res) => setTimeout(res, 500));
+
     fetchBlog();
-  } catch (error) {
+  } catch {
     alert("Failed to like blog");
   } finally {
     setLiking(false);
@@ -40,27 +42,27 @@ const BlogDetails = () => {
 };
 
 
-  // const addComment = async () => {
-  //   if (!comment.trim()) return;
-  //   await API.post(`/blogs/${id}/comment`, { text: comment });
-  //   setComment("");
-  //   fetchBlog();
-  // };
 
-  const addComment = async () => {
+const addComment = async () => {
   if (!comment.trim()) return;
 
   try {
     setCommentLoading(true);
+
     await API.post(`/blogs/${id}/comment`, { text: comment });
+
+    // 🔥 force visibility
+    await new Promise((res) => setTimeout(res, 500));
+
     setComment("");
     fetchBlog();
-  } catch (error) {
+  } catch {
     alert("Failed to add comment");
   } finally {
     setCommentLoading(false);
   }
 };
+
 
 
   const shareBlog = async () => {
