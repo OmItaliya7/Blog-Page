@@ -19,13 +19,25 @@ router.get("/", getAllBlogs);
 router.get("/:id", getSingleBlog);
 
 // User actions
-router.post("/:id/like", protect, likeBlog);
-router.post("/:id/comment", protect, addComment);
+router.post("/:id/like", protect, (req, res, next) => {
+  if (req.user.role !== "user") {
+    return res.status(403).json({ message: "Only users can like blogs" });
+  }
+  next();
+}, likeBlog);
 
+router.post("/:id/comment", protect, (req, res, next) => {
+  if (req.user.role !== "user") {
+    return res.status(403).json({ message: "Only users can comment" });
+  }
+  next();
+}, addComment);
 
 // Admin routes
 router.post("/", protect, adminOnly, createBlog);
 router.put("/:id", protect, adminOnly, updateBlog);
 router.delete("/:id", protect, adminOnly, deleteBlog);
+
+
 
 module.exports = router;

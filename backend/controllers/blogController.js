@@ -85,34 +85,46 @@ exports.getSingleBlog = async (req, res) => {
 //  LIKE / UNLIKE BLOG (USER)
 exports.likeBlog = async (req, res) => {
   try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
 
     const userId = req.user.id;
 
-    if (blog.likes.includes(userId)) {
-      // Unlike
+    const alreadyLiked = blog.likes.some(
+      (id) => id.toString() === userId
+    );
+
+    if (alreadyLiked) {
       blog.likes = blog.likes.filter(
         (id) => id.toString() !== userId
       );
     } else {
-      // Like
       blog.likes.push(userId);
     }
 
     await blog.save();
-    res.json({ likes: blog.likes.length });
+    res.json(blog);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Like blog error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
 
 //  ADD COMMENT (USER)
 exports.addComment = async (req, res) => {
   try {
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Not authorized" });
+    }
+
     const { text } = req.body;
-    if (!text)
+    if (!text) {
       return res.status(400).json({ message: "Comment text required" });
+    }
 
     const blog = await Blog.findById(req.params.id);
     if (!blog) return res.status(404).json({ message: "Blog not found" });
@@ -125,6 +137,7 @@ exports.addComment = async (req, res) => {
     await blog.save();
     res.status(201).json(blog.comments);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Add comment error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 };
