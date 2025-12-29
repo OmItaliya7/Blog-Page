@@ -20,50 +20,17 @@ const BlogDetails = () => {
     fetchBlog();
   }, [id]);
 
-
-
-const likeBlog = async () => {
-  if (liking) return;
-
-  try {
-    setLiking(true);
-
+  const likeBlog = async () => {
     await API.post(`/blogs/${id}/like`);
-
-    // 🔥 force minimum visibility (500ms)
-    await new Promise((res) => setTimeout(res, 500));
-
     fetchBlog();
-  } catch {
-    alert("Failed to like blog");
-  } finally {
-    setLiking(false);
-  }
-};
+  };
 
-
-
-const addComment = async () => {
-  if (!comment.trim()) return;
-
-  try {
-    setCommentLoading(true);
-
+  const addComment = async () => {
+    if (!comment.trim()) return;
     await API.post(`/blogs/${id}/comment`, { text: comment });
-
-    // 🔥 force visibility
-    await new Promise((res) => setTimeout(res, 500));
-
     setComment("");
     fetchBlog();
-  } catch {
-    alert("Failed to add comment");
-  } finally {
-    setCommentLoading(false);
-  }
-};
-
-
+  };
 
   const shareBlog = async () => {
     const url = window.location.href;
@@ -114,10 +81,9 @@ const addComment = async () => {
         {user && (
           <button
             onClick={likeBlog}
-            disabled={liking}
-            className={`text-sm px-3 py-1 border rounded transition $ {liking ? "opacity-60 cursor-not-allowed" : "hover:bg-gray-100"`}
+            className="text-sm px-3 py-1 border rounded hover:bg-gray-100"
           >
-             {liking ? "Liking..." : `❤️ ${blog.likes.length}`}
+            ❤️ {blog.likes.length}
           </button>
         )}
         <button
@@ -152,10 +118,9 @@ const addComment = async () => {
             <div className="flex justify-end">
               <button
                 onClick={addComment}
-                disabled={commentLoading}
-                className={`mt-2 px-4 py-1.5 text-sm rounded transition ${commentLoading ? "bg-gray-400 cursor-not-allowed" : "bg-black text-white hover:bg-gray-900"}`}
+                className="mt-2 px-4 py-1.5 text-sm bg-black text-white rounded hover:bg-gray-900"
               >
-                 {commentLoading ? "Posting..." : "Post"}
+                Post
               </button>
             </div>
           </div>
