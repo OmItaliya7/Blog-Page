@@ -8,26 +8,26 @@ connectDB();
 
 const app = express();
 
-// Middlewares
-app.use(cors({
-  origin: "*",
-  credentials: true,
-}));
+app.use(
+  cors({
+    origin: [
+      "https://blog-space-snowy-gamma.vercel.app/api", // frontend
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
+// IMPORTANT: handle preflight requests
+app.options("*", cors());
 
 app.use(express.json());
 
-// Routes
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/blogs", require("./routes/blogRoutes"));
 
-
 app.get("/", (req, res) => {
-  res.send("API running successfully");
+  res.send("API running successfully 🚀");
 });
 
-app.use((req, res) => {
-  res.status(404).json({ message: "Route not found" });
-});
-
-const PORT = process.env.PORT || 5000;
 module.exports = app;
