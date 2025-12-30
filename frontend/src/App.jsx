@@ -27,13 +27,13 @@ function App() {
       <Toaster position="top-right" />
       <Layout>
         <Routes>
-          {/* Public */}
+          
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/blog/:id" element={<BlogDetails />} />
 
-          {/* Admin */}
+         
           <Route path="/admin" element={<AdminLogin />} />
           <Route
             path="/admin/dashboard"

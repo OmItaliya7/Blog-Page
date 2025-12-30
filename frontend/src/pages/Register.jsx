@@ -22,7 +22,7 @@ const Register = () => {
       const res = await API.post("/auth/register", form);
       setSuccess(res.data.message || "Registration successful");
 
-      // small delay for better UX
+      
       setTimeout(() => {
         navigate("/login");
       }, 1000);

@@ -23,7 +23,7 @@ const AdminLogin = () => {
         password,
       });
 
-      // ✅ store backend response as-is
+      
       login(res.data);
       navigate("/admin/dashboard");
     } catch (err) {

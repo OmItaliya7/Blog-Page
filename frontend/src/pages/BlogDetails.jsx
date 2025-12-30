@@ -50,22 +50,22 @@ const BlogDetails = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      {/* IMAGE */}
+      
       <img
         src={blog.mediaUrl}
         alt={blog.title}
         className="w-full h-64 object-cover rounded-md"
       />
 
-      {/* TITLE */}
+      
       <h1 className="text-3xl font-semibold mt-6">{blog.title}</h1>
 
-      {/* DATE */}
+      
       <p className="text-sm text-gray-500 mt-1">
         {new Date(blog.createdAt).toLocaleDateString()}
       </p>
 
-      {/* ACTIONS */}
+      
       <div className="flex items-center gap-4 mt-4">
         {user && (
           <button
@@ -83,18 +83,18 @@ const BlogDetails = () => {
         </button>
       </div>
 
-      {/* CONTENT */}
+      
       <div className="mt-6 text-gray-800 leading-relaxed whitespace-pre-line">
         {blog.description}
       </div>
 
-      {/* COMMENTS */}
+      
       <div className="mt-12 pt-6 border-t">
         <h3 className="text-xl font-semibold mb-4">
           Comments ({blog.comments.length})
         </h3>
 
-        {/* ADD COMMENT */}
+        
         {user ? (
           <div className="bg-gray-50 border rounded-lg p-4 mb-6">
             <textarea
@@ -120,7 +120,7 @@ const BlogDetails = () => {
           </p>
         )}
 
-        {/* COMMENT LIST */}
+        
         <div className="space-y-4">
           {blog.comments.length === 0 && (
             <p className="text-sm text-gray-400">
@@ -133,12 +133,12 @@ const BlogDetails = () => {
               key={i}
               className="flex gap-3 border rounded-lg p-3 bg-white"
             >
-              {/* Avatar */}
+             
               <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold">
                 {c.user?.name?.charAt(0)?.toUpperCase() || "U"}
               </div>
 
-              {/* Comment content */}
+              
               <div>
                 <p className="text-sm font-medium">
                   {c.user?.name || "User"}

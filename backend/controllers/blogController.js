@@ -54,7 +54,7 @@ exports.deleteBlog = async (req, res) => {
   }
 };
 
-//  GET ALL BLOGS (PUBLIC)
+//  GET ALL BLOGS 
 exports.getAllBlogs = async (req, res) => {
   try {
     const blogs = await Blog.find()
@@ -82,7 +82,7 @@ exports.getSingleBlog = async (req, res) => {
   }
 };
 
-//  LIKE / UNLIKE BLOG (USER)
+//  LIKE / UNLIKE BLOG 
 exports.likeBlog = async (req, res) => {
   try {
     if (!req.user || !req.user.id) {
@@ -114,7 +114,7 @@ exports.likeBlog = async (req, res) => {
   }
 };
 
-//  ADD COMMENT (USER)
+//  ADD COMMENT 
 exports.addComment = async (req, res) => {
   try {
     if (!req.user || !req.user.id) {

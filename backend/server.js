@@ -17,7 +17,7 @@ app.use(
 
 app.use(express.json());
 
-// Connect DB AFTER middleware
+
 connectDB();
 
 app.use("/api/auth", require("./routes/authRoutes"));

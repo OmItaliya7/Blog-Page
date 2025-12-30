@@ -20,7 +20,7 @@ const Login = () => {
         password,
       });
 
-      // ✅ store exactly what backend sends
+      
       login(res.data);
       navigate("/");
     } catch (err) {

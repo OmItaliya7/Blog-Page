@@ -2,14 +2,14 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-// Generate JWT
+
 const generateToken = (id, role) => {
   return jwt.sign({ id, role }, process.env.JWT_SECRET, {
     expiresIn: "7d",
   });
 };
 
-//  USER REGISTER
+
 exports.registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -31,7 +31,7 @@ exports.registerUser = async (req, res) => {
       password: hashedPassword,
     });
 
-    // ✅ NO token here
+
     res.status(201).json({
       message: "User registered successfully. Please login.",
     });
@@ -41,7 +41,7 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-//  USER LOGIN
+
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -50,7 +50,7 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    // ✅ MUST select password
+ 
     const user = await User.findOne({ email }).select("+password");
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });

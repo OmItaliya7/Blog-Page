@@ -17,7 +17,7 @@ const Dashboard = () => {
   });
   const [editingId, setEditingId] = useState(null);
 
-  // Extra safety (route is already protected)
+  
   if (!user || user.role !== "admin") {
     return (
       <p className="text-center mt-20 text-red-500">
@@ -92,7 +92,7 @@ const Dashboard = () => {
         Admin Dashboard
       </h1>
 
-      {/* FORM */}
+      
       <form
         onSubmit={handleSubmit}
         className="border rounded-md p-4 mb-8 bg-gray-50"
@@ -156,7 +156,7 @@ const Dashboard = () => {
         </button>
       </form>
 
-      {/* BLOG LIST */}
+      
       <div>
         <h2 className="text-lg font-medium mb-4">
           All Blogs

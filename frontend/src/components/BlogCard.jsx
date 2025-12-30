@@ -5,7 +5,7 @@ const BlogCard = ({ blog, onEdit, onDelete }) => {
 
   return (
     <div className="border rounded-xl p-4 shadow-sm hover:shadow-md transition bg-white">
-      {/* IMAGE */}
+      
       <div
         onClick={() => navigate(`/blog/${blog._id}`)}
         className="cursor-pointer"

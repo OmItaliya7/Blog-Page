@@ -50,7 +50,7 @@ const Home = () => {
                     {blog.description}
                   </p>
 
-                  {/* FOOTER */}
+                  
                   <div className="mt-5 text-sm text-gray-500 text-right">
                     {new Date(blog.createdAt).toLocaleDateString()}
                 </div>
