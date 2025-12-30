@@ -7,8 +7,6 @@ const BlogDetails = () => {
   const { id } = useParams();
   const { user } = useAuth();
   const [blog, setBlog] = useState(null);
-  const [liking, setLiking] = useState(false);
-  const [commentLoading, setCommentLoading] = useState(false);
   const [comment, setComment] = useState("");
 
   const fetchBlog = async () => {
@@ -34,7 +32,6 @@ const BlogDetails = () => {
 
   const shareBlog = async () => {
     const url = window.location.href;
-
     if (navigator.share) {
       try {
         await navigator.share({
@@ -42,16 +39,10 @@ const BlogDetails = () => {
           text: blog.title,
           url,
         });
-      } catch (err) {
-        console.log("Share cancelled");
-      }
+      } catch {}
     } else {
-      try {
-        await navigator.clipboard.writeText(url);
-        alert("Link copied to clipboard!");
-      } catch (err) {
-        alert("Unable to copy link");
-      }
+      await navigator.clipboard.writeText(url);
+      alert("Link copied to clipboard!");
     }
   };
 
@@ -59,24 +50,22 @@ const BlogDetails = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      
+      {/* IMAGE */}
       <img
         src={blog.mediaUrl}
         alt={blog.title}
         className="w-full h-64 object-cover rounded-md"
       />
 
-   
-      <h1 className="text-3xl font-semibold mt-6">
-        {blog.title}
-      </h1>
+      {/* TITLE */}
+      <h1 className="text-3xl font-semibold mt-6">{blog.title}</h1>
 
-    
+      {/* DATE */}
       <p className="text-sm text-gray-500 mt-1">
         {new Date(blog.createdAt).toLocaleDateString()}
       </p>
 
-     
+      {/* ACTIONS */}
       <div className="flex items-center gap-4 mt-4">
         {user && (
           <button
@@ -94,33 +83,34 @@ const BlogDetails = () => {
         </button>
       </div>
 
-      
+      {/* CONTENT */}
       <div className="mt-6 text-gray-800 leading-relaxed whitespace-pre-line">
         {blog.description}
       </div>
 
-      
+      {/* COMMENTS */}
       <div className="mt-12 pt-6 border-t">
-        <h3 className="text-lg font-semibold mb-4">
+        <h3 className="text-xl font-semibold mb-4">
           Comments ({blog.comments.length})
         </h3>
 
-        
+        {/* ADD COMMENT */}
         {user ? (
-          <div className="mb-6">
+          <div className="bg-gray-50 border rounded-lg p-4 mb-6">
             <textarea
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Write a comment..."
               rows={3}
-              className="w-full border border-gray-300 rounded-md p-3 text-sm focus:outline-none focus:ring-1 focus:ring-black"
+              className="w-full border rounded-md p-3 text-sm focus:outline-none focus:ring-2 focus:ring-black"
             />
-            <div className="flex justify-end">
+            <div className="flex justify-end mt-2">
               <button
                 onClick={addComment}
-                className="mt-2 px-4 py-1.5 text-sm bg-black text-white rounded hover:bg-gray-900"
+                disabled={!comment.trim()}
+                className="px-4 py-1.5 text-sm bg-black text-white rounded hover:bg-gray-900 disabled:opacity-50"
               >
-                Post
+                Post Comment
               </button>
             </div>
           </div>
@@ -130,19 +120,36 @@ const BlogDetails = () => {
           </p>
         )}
 
-        
+        {/* COMMENT LIST */}
         <div className="space-y-4">
           {blog.comments.length === 0 && (
             <p className="text-sm text-gray-400">
-              No comments yet.
+              No comments yet. Be the first to comment!
             </p>
           )}
 
           {blog.comments.map((c, i) => (
-            <div key={i} className="pb-3 border-b last:border-b-0">
-              <p className="text-sm text-gray-800">
-                {c.text}
-              </p>
+            <div
+              key={i}
+              className="flex gap-3 border rounded-lg p-3 bg-white"
+            >
+              {/* Avatar */}
+              <div className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center text-sm font-semibold">
+                {c.user?.name?.charAt(0)?.toUpperCase() || "U"}
+              </div>
+
+              {/* Comment content */}
+              <div>
+                <p className="text-sm font-medium">
+                  {c.user?.name || "User"}
+                </p>
+                <p className="text-sm text-gray-700 mt-1">
+                  {c.text}
+                </p>
+                <p className="text-xs text-gray-400 mt-1">
+                  {new Date(c.createdAt).toLocaleString()}
+                </p>
+              </div>
             </div>
           ))}
         </div>
